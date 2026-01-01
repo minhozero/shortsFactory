@@ -1,3 +1,0 @@
-ERROR [lib::error] Error: channel closed
-ERROR [portable_pty::win::psuedocon] CreateProcessW `"\"C:\\Program Files\\nodejs\\npm\" run dev\0"` in cwd `Some("C:\\project\\shortsFactory\0")` failed: %1은(는) 올바른 Win32 응용 프로그램이 아닙니다. (os error 193)
-ERROR [portable_pty::win::psuedocon] CreateProcessW `"\"C:\\Program Files\\nodejs\\npm\" run inngest:dev\0"` in cwd `Some("C:\\project\\shortsFactory\0")` failed: %1은(는) 올바른 Win32 응용 프로그램이 아닙니다. (os error 193)
