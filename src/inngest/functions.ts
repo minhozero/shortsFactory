@@ -35,20 +35,20 @@ export const execute = inngest.createFunction(
     //   }
     // )
 
-    // const { steps: anthropicSteps } = await step.ai.wrap(
-    //   "anthropic-generate-text",
-    //   generateText, 
-    //   {
-    //     model: anthropic("claude-sonnet-4-5"),
-    //     system: "You are a helpful assistant.",
-    //     prompt: "What is 2 + 2?"
-    //   }
-    // )
+    const { steps: anthropicSteps } = await step.ai.wrap(
+      "anthropic-generate-text",
+      generateText, 
+      {
+        model: anthropic("claude-sonnet-4-5"),
+        system: "You are a helpful assistant.",
+        prompt: "What is 2 + 2?"
+      }
+    )
 
     return {
       geminiSteps,
       // openaiSteps,
-      // anthropicSteps
+      anthropicSteps
     }
   },
 );
