@@ -2,9 +2,9 @@ import { requireAuth } from "@/lib/auth-utils";
 
 interface PageProps {
     params: Promise<{
-        workflowId: string
+        workflowId: string;
     }>
-}
+};
 
 const Page = async ({ params }: PageProps) => {
     await requireAuth()
@@ -13,4 +13,4 @@ const Page = async ({ params }: PageProps) => {
     return <p>작업 id: {workflowId}</p>
 }
 
-export default Page
+export default Page;
