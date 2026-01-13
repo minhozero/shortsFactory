@@ -34,3 +34,23 @@ export const useCreateWorkflow = () => {
         }),
     );
 };
+
+/**
+ * Hook to remove a workflow
+ */
+export const useRemoveWorkflow = () => {
+    const trpc = useTRPC();
+    const queryClient = useQueryClient();
+
+    return useMutation(
+        trpc.workFlows.remove.mutationOptions({
+            onSuccess: (data) => {
+                toast.success(`Workflow "${data.name}" removed`);
+                queryClient.invalidateQueries(trpc.workFlows.getMany.queryOptions({}));
+                queryClient.invalidateQueries(
+                    trpc.workFlows.getOne.queryFilter({ id: data.id }),
+                );
+            }
+        })
+    )
+}
