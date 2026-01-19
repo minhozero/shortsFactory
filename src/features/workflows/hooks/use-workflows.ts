@@ -1,3 +1,4 @@
+"use client"
 import { useTRPC } from "@/trpc/client"
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
@@ -54,3 +55,36 @@ export const useRemoveWorkflow = () => {
         })
     )
 }
+
+/**
+ * 서스펜스를 사용하여 단일 워크플로를 가져오는 후크
+ */
+export const useSuspenseWorkflow = (id: string) => {
+    const trpc = useTRPC();
+    return useSuspenseQuery(trpc.workFlows.getOne.queryOptions({ id }))
+}
+
+/**
+ * 워크플로 이름을 업데이트하는 후크
+ */
+export const useUpdateWorkflowName = () => {
+    const queryClient = useQueryClient();
+    const trpc = useTRPC();
+
+    return useMutation(
+        trpc.workFlows.updateName.mutationOptions({
+            onSuccess: (data) => {
+                toast.success(`Workflow "${data.name}" updated`);
+                queryClient.invalidateQueries(
+                    trpc.workFlows.getMany.queryOptions({}),
+                );
+                queryClient.invalidateQueries(
+                    trpc.workFlows.getOne.queryOptions({ id: data.id })
+                );
+            },
+            onError: (error) => {
+                toast.error(`Failed to update workflow: ${error.message}`);
+            },
+        }),
+    );
+};
