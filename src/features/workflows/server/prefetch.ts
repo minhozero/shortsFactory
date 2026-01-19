@@ -9,3 +9,10 @@ type Input = inferInput<typeof trpc.workFlows.getMany>;
 export const prefetchWorkflows = (params: Input) => {
     return prefetch(trpc.workFlows.getMany.queryOptions(params));
 };
+
+/**
+ * Prefetch a single workflow
+ */
+export const prefetchWorkflow = (id: string) => {
+    return prefetch(trpc.workFlows.getOne.queryOptions({ id }));
+};
