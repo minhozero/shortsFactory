@@ -1,8 +1,10 @@
 import { generateSlug } from "random-word-slugs"
 import prisma from "@/lib/db";
+import type { Node, Edge } from "@xyflow/react"
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { PAGINATION } from "@/config/constants";
+import { NodeType } from "@/generated/prisma/client"
 
 export const workflowsRouter = createTRPCRouter({
     create: protectedProcedure.mutation(({ ctx }) => {
@@ -10,6 +12,13 @@ export const workflowsRouter = createTRPCRouter({
             data: {
                 name: generateSlug(3),
                 userId: ctx.auth.user.id,
+                nodes: {
+                    create: {
+                        type: NodeType.INITIAL,
+                        position: { x: 0, y: 0 },
+                        name: NodeType.INITIAL,
+                    },
+                },
             },
         })
     }),
@@ -33,10 +42,35 @@ export const workflowsRouter = createTRPCRouter({
         }),
     getOne: protectedProcedure
         .input(z.object({ id: z.string() }))
-        .query(({ ctx, input }) => {
-            return prisma.workflow.findUniqueOrThrow({ // findFirst
-                where: { id: input.id, userId: ctx.auth.user.id }
+        .query(async ({ ctx, input }) => {
+            const workflow = await prisma.workflow.findUniqueOrThrow({ // findFirst
+                where: { id: input.id, userId: ctx.auth.user.id },
+                include: { nodes: true, connections: true },
             });
+
+            // 서버 노드를 React Flow와 호환되는 노드로 변환
+            const nodes: Node[] = workflow.nodes.map((node) => ({
+                id: node.id,
+                type: node.type,
+                position: node.position as { x: number, y: number },
+                data: (node.data as Record<string, unknown>) || {},
+            }));
+
+            // 서버 연결을 React Flow와 호환되는 엣지로 변환
+            const edges: Edge[] = workflow.connections.map((connection) => ({
+                id: connection.id,
+                source: connection.fromNodeId,
+                target: connection.toNodeId,
+                sourceHandle: connection.fromOutput,
+                targetHandle: connection.toInput,
+            }));
+
+            return {
+                id: workflow.id,
+                name: workflow.name,
+                nodes,
+                edges,
+            };
         }),
     getMany: protectedProcedure
         .input(
