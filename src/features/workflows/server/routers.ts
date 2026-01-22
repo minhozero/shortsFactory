@@ -4,7 +4,7 @@ import type { Node, Edge } from "@xyflow/react"
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { PAGINATION } from "@/config/constants";
-import { NodeType } from "@/generated/prisma/client"
+import { NodeType } from "@/generated/prisma/enums"
 
 export const workflowsRouter = createTRPCRouter({
     create: protectedProcedure.mutation(({ ctx }) => {
