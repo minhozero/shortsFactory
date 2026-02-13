@@ -44,13 +44,11 @@ export const HttpRequestNode = memo((props: NodeProps<HttpRequestNodeType>) => {
 
     return (
         <>
-            <HttpRequestDialog 
+            <HttpRequestDialog
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
                 onSubmit={handleSubmit}
-                defaultEndpoint={nodeData.endpoint} // TODO: Check if it can be improved by just sending initialValues={nodeData}
-                defaultMethod={nodeData.method}
-                defalutBody={nodeData.body}
+                defaultValues={nodeData}
             />
             <BaseExecutionNode
                 {...props}
