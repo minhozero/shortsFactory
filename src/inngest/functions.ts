@@ -11,7 +11,7 @@ export const executeWorkflow = inngest.createFunction(
     async ({ event, step }) => {
         const workflowId = event.data.workflowId;
 
-        if(!workflowId) {
+        if (!workflowId) {
             throw new NonRetriableError("워크플로우 ID가 누락 되었습니다."); // workflow ID is missing
         }
 
@@ -41,6 +41,9 @@ export const executeWorkflow = inngest.createFunction(
             });
         }
 
-        return { sortedNodes }
+        return {
+            workflowId,
+            result: context,
+        }
     },
 );
